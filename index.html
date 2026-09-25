@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>I Know I Wont</title>
+	<style>
+		:root {
+			color-scheme: light;
+			--paper: #ffffff;
+			--ink: #000;
+			--background-blur: 6px;
+		}
+
+		* {
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			width: 100%;
+			min-height: 100%;
+			margin: 0;
+		}
+
+		body {
+			position: relative;
+			isolation: isolate;
+			min-height: 100vh;
+			overflow: hidden;
+			color: var(--ink);
+			background-color: var(--paper);
+		}
+
+		body::before {
+			position: fixed;
+			inset: -100px;
+			z-index: -1;
+			background: url("superstar.jpg") center / cover no-repeat;
+			content: "";
+			filter: blur(var(--background-blur));
+		}
+
+		h1 {
+			margin: 0;
+			padding: 22px 24px;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: clamp(4rem, 13vw, 11rem);
+			font-weight: 700;
+			line-height: .85;
+			letter-spacing: 0;
+		}
+
+		#music {
+			position: fixed;
+			width: 1px;
+			height: 1px;
+			border: 0;
+			opacity: 0;
+			pointer-events: none;
+		}
+
+		#playButton {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background-color: #FF0000;
+			color: white;
+			border: none;
+			border-radius: 12px;
+			padding: 16px 32px;
+			font-size: 18px;
+			font-weight: 600;
+			cursor: pointer;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			transition: background-color 0.3s ease;
+		}
+
+		#playButton:hover {
+			background-color: #FF0000;
+		}
+
+		#playButton:active {
+			transform: translate(-50%, -50%) scale(0.98);
+		}
+	</style>
+</head>
+<body>
+	<h1 id="title">NOW PLAYING - ...</h1>
+
+	<button id="playButton">PLAY</button>
+
+	<div id="music" aria-hidden="true"></div>
+	<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+	<script>
+		let controller = null;
+
+		// Autoplay on page load
+		window.onSpotifyIframeApiReady = function (IFrameAPI) {
+			IFrameAPI.createController(document.getElementById('music'), {
+				uri: 'spotify:track:3hFKBe3hcRPZKKPV0RRnig',
+				width: '1',
+				height: '1'
+			}, function (ctrl) {
+				controller = ctrl;
+				ctrl.addListener('playback_update', function (event) {
+					var playback = event.data;
+					if (!playback.isPaused && playback.duration > 0 && playback.position >= playback.duration - 500) {
+						ctrl.seek(0);
+						ctrl.play();
+					}
+				});
+			});
+		};
+
+		// Handle play button click
+		document.getElementById('playButton').addEventListener('click', function () {
+			if (controller) {
+				controller.play();
+				document.getElementById('title').textContent = 'NOW PLAYING - I Know I Wont by sundiver ca';
+				document.getElementById('playButton').style.display = 'none';
+			}
+		});
+	</script>
+</body>
+</html>
