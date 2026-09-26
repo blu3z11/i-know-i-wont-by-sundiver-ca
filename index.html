@@ -8,8 +8,9 @@
 		:root {
 			color-scheme: light;
 			--paper: #ffffff;
-			--ink: #ffefbe;
+			--ink: #000000;
 			--background-blur: 6px;
+			--text-yellow: #ffd200;
 		}
 
 		* {
@@ -30,6 +31,12 @@
 			overflow: hidden;
 			color: var(--ink);
 			background-color: var(--paper);
+			transition: color 0.3s ease, background-color 0.3s ease;
+		}
+
+		body.playing {
+			color: var(--text-yellow);
+			background-color: #1a1a1a;
 		}
 
 		body::before {
@@ -39,6 +46,12 @@
 			background: url("superstar.jpg") center / cover no-repeat;
 			content: "";
 			filter: blur(var(--background-blur));
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+
+		body.playing::before {
+			opacity: 1;
 		}
 
 		h1 {
@@ -127,6 +140,7 @@
 			document.getElementById('title').textContent = 'NOW PLAYING - I Know I Wont by sundiver ca';
 			document.getElementById('title').classList.add('comic-sans');
 			document.getElementById('playButton').style.display = 'none';
+			document.body.classList.add('playing');
 		});
 	</script>
 </body>
