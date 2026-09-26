@@ -53,6 +53,10 @@
 			letter-spacing: 0;
 		}
 
+		h1.comic-sans {
+			font-family: "Comic Sans MS", cursive;
+		}
+
 		#music {
 			position: fixed;
 			width: 1px;
@@ -196,6 +200,7 @@
 				controller.play();
 			}
 			document.getElementById('title').textContent = 'NOW PLAYING - I Know I Wont by sundiver ca';
+			document.getElementById('title').classList.add('comic-sans');
 			document.getElementById('playButton').style.display = 'none';
 			document.getElementById('lyricsWrap').classList.add('visible');
 			setInterval(cycleLyrics, 2200);
