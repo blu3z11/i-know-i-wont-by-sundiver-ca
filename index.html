@@ -68,7 +68,7 @@
 			font-family: "Comic Sans MS", cursive;
 		}
 
-		#music {
+		#player {
 			position: fixed;
 			width: 1px;
 			height: 1px;
@@ -109,33 +109,50 @@
 
 	<button id="playButton">PLAY</button>
 
-	<div id="music" aria-hidden="true"></div>
-	<script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+	<div id="player" aria-hidden="true"></div>
+	<script src="https://www.youtube.com/iframe_api"></script>
 	<script>
-		let controller = null;
+		let player;
+		let ready = false;
+		const VIDEO_ID = '50dn3IqgRPA';
 
-		// Autoplay on page load
-		window.onSpotifyIframeApiReady = function (IFrameAPI) {
-			IFrameAPI.createController(document.getElementById('music'), {
-				uri: 'spotify:track:6mU7czKCBwd61T9H3cbsIZ',
+		function onPlayerReady() {
+			ready = true;
+		}
+
+		function onPlayerStateChange(event) {
+			if (event.data === YT.PlayerState.ENDED) {
+				player.seekTo(0);
+				player.playVideo();
+			}
+		}
+
+		window.onYouTubeIframeAPIReady = function () {
+			player = new YT.Player('player', {
+				height: '1',
 				width: '1',
-				height: '1'
-			}, function (ctrl) {
-				controller = ctrl;
-				ctrl.addListener('playback_update', function (event) {
-					var playback = event.data;
-					if (!playback.isPaused && playback.duration > 0 && playback.position >= playback.duration - 500) {
-						ctrl.seek(0);
-						ctrl.play();
-					}
-				});
+				videoId: VIDEO_ID,
+				playerVars: {
+					autoplay: 0,
+					controls: 0,
+					disablekb: 1,
+					fs: 0,
+					iv_load_policy: 3,
+					modestbranding: 1,
+					playsinline: 1,
+					rel: 0,
+					showinfo: 0
+				},
+				events: {
+					'onReady': onPlayerReady,
+					'onStateChange': onPlayerStateChange
+				}
 			});
 		};
 
-		// Handle play button click
 		document.getElementById('playButton').addEventListener('click', function () {
-			if (controller) {
-				controller.play();
+			if (ready && player) {
+				player.playVideo();
 			}
 			document.getElementById('title').textContent = 'NOW PLAYING - I Know I Wont by sundiver ca';
 			document.getElementById('title').classList.add('comic-sans');
