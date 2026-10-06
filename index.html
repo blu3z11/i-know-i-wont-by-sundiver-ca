@@ -54,6 +54,12 @@
 			opacity: 1;
 		}
 
+		body.transition::before {
+			background: url("sundivernebraska.jpg") center / cover no-repeat;
+			opacity: 1;
+			transition: opacity 1s ease, background 1s ease;
+		}
+
 		h1 {
 			margin: 0;
 			padding: 22px 24px;
@@ -62,10 +68,16 @@
 			font-weight: 700;
 			line-height: .85;
 			letter-spacing: 0;
+			transition: color 0.3s ease, font-family 0.3s ease;
 		}
 
 		h1.comic-sans {
 			font-family: "Comic Sans MS", cursive;
+		}
+
+		h1.garamond {
+			font-family: Garamond, serif;
+			color: #757694;
 		}
 
 		#player {
@@ -114,7 +126,9 @@
 	<script>
 		let player;
 		let ready = false;
+		let transitioned = false;
 		const VIDEO_ID = '50dn3IqgRPA';
+		const TRANSITION_TIME = 224;
 
 		function onPlayerReady() {
 			ready = true;
@@ -124,7 +138,32 @@
 			if (event.data === YT.PlayerState.ENDED) {
 				player.seekTo(0);
 				player.playVideo();
+				transitioned = false;
+				document.body.classList.remove('transition');
+				document.getElementById('title').classList.remove('garamond');
+				document.getElementById('title').classList.add('comic-sans');
+			} else if (event.data === YT.PlayerState.PLAYING) {
+				startTimeCheck();
 			}
+		}
+
+		function startTimeCheck() {
+			const interval = setInterval(() => {
+				if (!player || player.getPlayerState() !== YT.PlayerState.PLAYING) {
+					clearInterval(interval);
+					return;
+				}
+
+				const currentTime = player.getCurrentTime();
+				if (currentTime >= TRANSITION_TIME && !transitioned) {
+					transitioned = true;
+					const title = document.getElementById('title');
+					document.body.classList.add('transition');
+					title.classList.add('garamond');
+					title.classList.remove('comic-sans');
+					clearInterval(interval);
+				}
+			}, 100);
 		}
 
 		window.onYouTubeIframeAPIReady = function () {
