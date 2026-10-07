@@ -114,12 +114,39 @@
 		#playButton:active {
 			transform: translate(-50%, -50%) scale(0.98);
 		}
+
+		#skipButton {
+			position: fixed;
+			bottom: 16px;
+			left: 16px;
+			background-color: #757694;
+			color: white;
+			border: none;
+			border-radius: 8px;
+			padding: 8px 16px;
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			transition: background-color 0.3s ease;
+			z-index: 2;
+			display: none;
+		}
+
+		#skipButton:hover {
+			background-color: #868999;
+		}
+
+		#skipButton:active {
+			transform: scale(0.98);
+		}
 	</style>
 </head>
 <body>
 	<h1 id="title">NOW PLAYING - ...</h1>
 
 	<button id="playButton">PLAY</button>
+	<button id="skipButton">Skip to Live in Las Vegas</button>
 
 	<div id="player" aria-hidden="true"></div>
 	<script src="https://www.youtube.com/iframe_api"></script>
@@ -142,7 +169,9 @@
 				document.body.classList.remove('transition');
 				document.getElementById('title').classList.remove('garamond');
 				document.getElementById('title').classList.add('comic-sans');
+				document.getElementById('skipButton').style.display = 'none';
 			} else if (event.data === YT.PlayerState.PLAYING) {
+				document.getElementById('skipButton').style.display = 'block';
 				startTimeCheck();
 			}
 		}
@@ -161,6 +190,7 @@
 					document.body.classList.add('transition');
 					title.classList.add('garamond');
 					title.classList.remove('comic-sans');
+					document.getElementById('skipButton').style.display = 'none';
 					clearInterval(interval);
 				}
 			}, 100);
@@ -197,6 +227,18 @@
 			document.getElementById('title').classList.add('comic-sans');
 			document.getElementById('playButton').style.display = 'none';
 			document.body.classList.add('playing');
+		});
+
+		document.getElementById('skipButton').addEventListener('click', function () {
+			if (player) {
+				player.seekTo(TRANSITION_TIME);
+				document.getElementById('skipButton').style.display = 'none';
+				transitioned = true;
+				const title = document.getElementById('title');
+				document.body.classList.add('transition');
+				title.classList.add('garamond');
+				title.classList.remove('comic-sans');
+			}
 		});
 	</script>
 </body>
