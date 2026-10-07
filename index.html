@@ -168,6 +168,7 @@
 				document.body.classList.remove('transition');
 				document.getElementById('title').classList.remove('garamond');
 				document.getElementById('title').classList.add('comic-sans');
+				document.getElementById('title').textContent = 'NOW PLAYING - I Know I Wont by sundiver ca';
 				document.getElementById('skipButton').style.display = 'none';
 			} else if (event.data === YT.PlayerState.PLAYING) {
 				document.getElementById('skipButton').style.display = 'block';
@@ -189,6 +190,7 @@
 					document.body.classList.add('transition');
 					title.classList.add('garamond');
 					title.classList.remove('comic-sans');
+					title.textContent = 'NOW PLAYING - Live in Las Vegas by sundiver ca';
 					document.getElementById('skipButton').style.display = 'none';
 					clearInterval(interval);
 				}
@@ -236,6 +238,7 @@
 				document.body.classList.add('transition');
 				title.classList.add('garamond');
 				title.classList.remove('comic-sans');
+				title.textContent = 'NOW PLAYING - Live in Las Vegas by sundiver ca';
 				document.getElementById('skipButton').style.display = 'none';
 			}
 		});
